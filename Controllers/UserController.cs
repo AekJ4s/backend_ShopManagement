@@ -239,7 +239,7 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
-    [HttpGet("FindUser/{id}", Name = "User")]
+    [HttpGet("FindUser/{id}", Name = "FindUser")]
 
     public ActionResult GetUserById(int id)
     {

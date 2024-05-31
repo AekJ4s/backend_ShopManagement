@@ -137,3 +137,4 @@ C:\Users\aek\Desktop\SPMN\backend_ShopManagement\obj\Debug\net8.0\refint\backend
 C:\Users\aek\Desktop\SPMN\backend_ShopManagement\obj\Debug\net8.0\backend_ShopManagement.pdb
 C:\Users\aek\Desktop\SPMN\backend_ShopManagement\obj\Debug\net8.0\backend_ShopManagement.genruntimeconfig.cache
 C:\Users\aek\Desktop\SPMN\backend_ShopManagement\obj\Debug\net8.0\ref\backend_ShopManagement.dll
+c:\Users\aek\Desktop\SPMN\backend_ShopManagement\obj\Debug\net8.0\backend_ShopManagement.sourcelink.json
