@@ -108,9 +108,10 @@ public partial class DatabaseContext : DbContext
             entity.ToTable("PaymentsType");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountNumber).HasColumnName("Account_number");
+            entity.Property(e => e.AccountNumber)
+                .HasMaxLength(50)
+                .HasColumnName("Account_number");
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
         });

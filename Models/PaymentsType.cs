@@ -9,13 +9,13 @@ public partial class PaymentsType
 
     public string? Name { get; set; }
 
-    public int? AccountNumber { get; set; }
+    public string? AccountNumber = "0";
 
     public DateTime? CreateDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
 
-    public DateTime? IsDeleted { get; set; }
+    public bool? IsDeleted { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }
