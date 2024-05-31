@@ -44,22 +44,15 @@ public class PaymentsTypeController : ControllerBase
     public ActionResult<Response> CreatePaymentsType([FromBody] TypeCreate Request)
     {
         var CanUseType = _db.PaymentsTypes.Where(r => r.Name == Request.Name && r.IsDeleted != true).Count();
-        var CanUseBank = _db.PaymentsTypes.Where(r => r.AccountNumber == Request.AccountNumber && r.AccountNumber != "0" && r.AccountNumber != "ไม่ระบุ" && r.IsDeleted != true).Count();
+        var CanUseBank = _db.PaymentsTypes.Where(r => r.AccountNumber == Request.AccountNumber && r.AccountNumber != "0" && r.AccountNumber != "0" && r.IsDeleted != true).Count();
         if (Request.Name != null && CanUseType < 1 && CanUseBank < 1)
         {
-                if(Request.AccountNumber.Length < 11 && Request.AccountNumber.Length > 1){
-                    return BadRequest(new Response
-                    {
-                        Code = 400 ,
-                        Message = "เลขบัญชี ต้องเป็น 0 หรือมีแค่ 10 ตัวเท่านั้น",
-                        Data = null,
-                });
-                }
-           
+            if (Request.AccountNumber.Length == 10 || Request.AccountNumber.Length == 1)
+            {
                 PaymentsType paymentsType = new PaymentsType
                 {
                     Name = Request.Name.ToLower(),
-                    AccountNumber = (Request.AccountNumber == null || Request.AccountNumber == "0" || Request.AccountNumber == "string" ) ? "ไม่ระบุ" : Request.AccountNumber
+                    AccountNumber = (Request.AccountNumber == null || Request.AccountNumber == "0" || Request.AccountNumber == "string") ? "0" : Request.AccountNumber
                 };
 
                 string Message = PaymentsType.CreateType(_db, paymentsType);
@@ -69,7 +62,15 @@ public class PaymentsTypeController : ControllerBase
                     Message = Message,
                     Data = paymentsType,
                 };
-            
+            }
+            return BadRequest(new Response
+            {
+                Code = 400,
+                Message = "เลขบัญชี ต้องมีแค่ 1 (ในกรณีไม่ระบุ) ตัวหรือมีแค่ 10 ตัวเท่านั้น",
+                Data = null,
+            });
+
+
         }
         return BadRequest(new Response
         {
@@ -86,11 +87,15 @@ public class PaymentsTypeController : ControllerBase
     {
 
         PaymentsType paymentsTypeData = _db.PaymentsTypes.Where(e => e.Id == Request.Id && e.IsDeleted != true).AsNoTracking().ToList().First();
-
+        if (Request.AccountNumber.Length != 1 || Request.AccountNumber.Length != 10)
+        {
+            Request.AccountNumber = "0";
+        }
         Request.Name = (Request.Name?.ToLower() == "string" || Request.Name == paymentsTypeData.Name || Request.Name == null) ? null : Request.Name;
-        Request.AccountNumber = (Request.AccountNumber?.ToLower() == "string" || Request.AccountNumber == "0" || Request.AccountNumber == null) ? null : Request.AccountNumber;
+        Request.AccountNumber = (Request.AccountNumber == paymentsTypeData.AccountNumber || Request.AccountNumber == null) ? null : Request.AccountNumber;
 
-        if(Request.Name == null && Request.AccountNumber == null){
+        if (Request.Name == null && Request.AccountNumber == null)
+        {
             Request = null;
         }
 
@@ -98,20 +103,20 @@ public class PaymentsTypeController : ControllerBase
         if (paymentsTypeData != null && Request != null)
         {
             var CanUseType = _db.PaymentsTypes.Where(r => r.Name == Request.Name && r.IsDeleted != true).Count();
-            var CanUseBank = _db.PaymentsTypes.Where(r => r.AccountNumber == Request.AccountNumber && r.AccountNumber != "0"  && r.AccountNumber != "ไม่ระบุ" && r.IsDeleted != true).Count();
+            var CanUseBank = _db.PaymentsTypes.Where(r => r.AccountNumber == Request.AccountNumber && r.AccountNumber != "0" && r.IsDeleted != true).Count();
             if (Request.Id == paymentsTypeData.Id && CanUseBank < 1 && CanUseType < 1)
             {
-                if (Request.AccountNumber.Length < 11 && Request.AccountNumber.Length > 1)
+                if (Request.AccountNumber.Length != 1 && Request.AccountNumber.Length != 10 )
                 {
                     return BadRequest(new Response
                     {
                         Code = 400,
-                        Message = "เลขบัญชี ต้องเป็น 0 หรือมีแค่ 10 ตัวเท่านั้น",
+                        Message = "เลขบัญชี ต้องมีแค่ 1 (ในกรณีไม่ระบุ) ตัวหรือมีแค่ 10 ตัวเท่านั้น",
                         Data = null,
                     });
                 }
                 paymentsTypeData.Name = (Request.Name == null || Request.Name == "string") ? paymentsTypeData.Name : Request.Name;
-                paymentsTypeData.AccountNumber = (Request.AccountNumber == null || Request.AccountNumber == "0" || Request.AccountNumber == "string" ) ? "ไม่ระบุ" : Request.AccountNumber;
+                paymentsTypeData.AccountNumber = (Request.AccountNumber == null || Request.AccountNumber.Length == 1 || Request.AccountNumber == "string") ? "0" : Request.AccountNumber;
                 PaymentsType.EditType(_db, paymentsTypeData);
                 _db.SaveChanges();
                 return new Response
@@ -119,6 +124,8 @@ public class PaymentsTypeController : ControllerBase
                     Code = 200,
                     Message = "ประเภทของการชำระเงินถูกอัพเดตแล้ว",
                 };
+
+
             }
             return BadRequest(new Response
             {
