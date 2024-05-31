@@ -32,7 +32,6 @@ namespace backend_ShopManagement.Models
 
     public virtual UserRole? Role { get; set; }
 
-    public virtual ICollection<Sale> Sales { get; set; } = new List<Sale>();
     }
 
     public class UserCreate

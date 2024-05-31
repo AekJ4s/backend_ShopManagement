@@ -9,7 +9,7 @@ public partial class PaymentsType
 
     public string? Name { get; set; }
 
-    public string? AccountNumber = "0";
+    public string? AccountNumber { get; set; }
 
     public DateTime? CreateDate { get; set; }
 

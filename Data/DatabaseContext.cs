@@ -28,8 +28,6 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<Sale> Sales { get; set; }
-
     public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -124,27 +122,12 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.StockQuantity).HasColumnName("Stock_quantity");
+            entity.Property(e => e.Unit).HasMaxLength(50);
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
                 .HasConstraintName("FK_Products_Categories");
-        });
-
-        modelBuilder.Entity<Sale>(entity =>
-        {
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.CreateDate).HasColumnType("datetime");
-            entity.Property(e => e.SaleDate)
-                .HasColumnType("datetime")
-                .HasColumnName("Sale_date");
-            entity.Property(e => e.TotalAmount).HasColumnName("Total_amount");
-            entity.Property(e => e.UpdateDate).HasColumnType("datetime");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Sales)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Sale_user");
         });
 
         modelBuilder.Entity<Transaction>(entity =>
@@ -154,16 +137,16 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Price).HasColumnName("price");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
-            entity.Property(e => e.SaleId).HasColumnName("Sale_id");
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("FK_Transaction_Products");
 
-            entity.HasOne(d => d.Sale).WithMany(p => p.Transactions)
-                .HasForeignKey(d => d.SaleId)
-                .HasConstraintName("FK_Transaction_Sale");
+            entity.HasOne(d => d.User).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_Transactions_User");
         });
 
         modelBuilder.Entity<User>(entity =>

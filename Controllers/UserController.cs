@@ -177,7 +177,6 @@ public class UserController : ControllerBase
         NewData.Firstname = (NewData.Firstname?.ToLower() == "string" || NewData.Firstname == UserData.Firstname || NewData.Firstname == null) ? null : NewData.Firstname;
         NewData.Lastname = (NewData.Lastname?.ToLower() == "string" || NewData.Lastname == UserData.Lastname || NewData.Lastname == null) ? null : NewData.Lastname;
         NewData.RoleId = (NewData.RoleId == 0 || NewData.RoleId == UserData.RoleId || NewData.RoleId == null) ? null : NewData.RoleId;
-        
 
         if(NewData.Username == null && NewData.Firstname == null && NewData.Lastname == null && NewData.RoleId == null){
             NewData = null;
@@ -192,7 +191,6 @@ public class UserController : ControllerBase
                 UserData.Lastname = (NewData.Lastname?.ToLower() == "string" || NewData.Lastname == UserData.Lastname || NewData.Lastname == null) ? UserData.Lastname : NewData.Lastname;
                 UserData.Password = (NewData.NewPassword == null || NewData.NewPassword.ToLower() == "string") ? UserData.Password : NewData.NewPassword;
                 UserData.RoleId = (NewData.RoleId == null || NewData.RoleId == 0)? UserData.RoleId : NewData.RoleId;
-
                 backend_ShopManagement.Models.User.EditPassword(_db, UserData);
                 _db.SaveChanges();
                 return new Response
